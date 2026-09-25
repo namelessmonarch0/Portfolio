@@ -1,6 +1,6 @@
 # Kuday Yurter — portfolio
 
-Source for [kudayyurter.dev](https://kudayyurter.dev): a single page on black, with a pixel-art portrait, pixel lettering, and pixel logos that resolve as you scroll. Built with Next.js 16 and React 19; no animation libraries.
+Source for [kudayyurter.dev](https://kudayyurter.dev): a single page on black with pixel lettering, section headings that resolve from pixels as you scroll, and the tools I use shown with their real logos. Built with Next.js 16 and React 19; no animation libraries.
 
 ## Development
 
@@ -13,12 +13,12 @@ Open [localhost:3000](http://localhost:3000).
 
 ## How it fits together
 
-- `src/content/portfolio.ts`: all copy (bio, experience, projects, results, links). Edit this to change what the page says.
+- `src/content/portfolio.ts`: all copy (bio, tech stack order, experience, work and personal projects, links). Edit this to change what the page says.
 - `src/app/page.tsx`: page markup, server-rendered, so the page is complete without JavaScript.
-- `src/components/pixel-reveal.tsx`: canvas overlay that resolves its child from pixel blocks; the hero portrait also dissolves on scroll.
-- `src/components/reveal-on-scroll.tsx`, `count-up.tsx`, `site-header.tsx`: the other small motion pieces.
+- `src/components/pixel-reveal.tsx`: canvas overlay that resolves a section heading from pixel blocks.
+- `src/components/reveal-on-scroll.tsx`, `site-header.tsx`: the other small motion pieces.
 - `src/lib/pixel-font.ts`: 5×7 glyphs for the name and company monograms.
-- `src/lib/tech-logos.json`: 24×24 logo bitmaps generated from [Simple Icons](https://simpleicons.org) (CC0). Regenerate with `node scripts/build-tech-logos.mjs` (needs ImageMagick).
+- `public/logos/`: tech-stack logos as SVGs. Sources: [Devicon](https://devicon.dev) (MIT), [Simple Icons](https://simpleicons.org) (Databricks, CC0), Microsoft's official [Power Platform icons](https://learn.microsoft.com/power-platform/guidance/icons) (Power Platform, Copilot Studio), and Wikimedia Commons (Power BI; Tux by Larry Ewing, lewing@isc.tamu.edu, created with The GIMP). Dark single-color marks (Rust, Unreal, Unity, the AWS wordmark) are recolored white to show on black. Logos are trademarks of their owners.
 
 Motion only runs when `(scripting: enabled) and (prefers-reduced-motion: no-preference)` matches; otherwise, and in print, everything shows in its final state.
 

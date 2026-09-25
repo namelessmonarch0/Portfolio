@@ -3,12 +3,10 @@ import { PixelReveal } from "@/components/pixel-reveal";
 
 export function Section({
   id,
-  eyebrow,
   title,
   children,
 }: {
   id: string;
-  eyebrow: string;
   title: string;
   children: ReactNode;
 }) {
@@ -18,7 +16,6 @@ export function Section({
       className="section container"
       aria-labelledby={`${id}-title`}
     >
-      <p className="eyebrow">{eyebrow}</p>
       <PixelReveal className="section__title-wrap">
         <h2 id={`${id}-title`} className="section__title">
           {title}

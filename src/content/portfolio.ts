@@ -4,53 +4,48 @@ export const links = {
   email: "kudayyurter@gmail.com",
 };
 
-export const intro = {
-  tagline: "Software · Data · AI — Houston, TX",
-  headline: "Software engineer. Curious by default.",
-  body: "I turn messy data into useful systems — pipelines, AI agents, and software that makes things work better.",
-};
-
-export const results: {
-  start?: number;
-  value: number;
-  prefix: string;
-  suffix: string;
-  label: string;
-}[] = [
-  {
-    start: 35,
-    value: 55,
-    prefix: "35 → ",
-    suffix: "",
-    label: "Units per day, per machine",
-  },
-  { value: 98, prefix: "~", suffix: "%", label: "Correction-angle match" },
-  { value: 50, prefix: "", suffix: "%", label: "Less time on patent reviews" },
-];
-
 export const about = [
-  "I’m Kuday, a Computer Science student at Texas A&M University–Victoria, based in Houston. I build across software engineering, data, and AI — usually wherever there’s a slow process or a messy dataset worth improving.",
-  "My path into software has been hands-on. I’ve repaired devices, supported computer labs, and run an e-commerce production floor. At Engrave Me Now, I taught myself Python to connect the business’s data. At Cummins, that curiosity grew into manufacturing pipelines, machine learning, and tools for engineers.",
-  "Outside of work, I’m into Linux, fast terminal workflows, and game development with Raylib, Unreal Engine, and Unity. I enjoy tools that invite you to take them apart.",
+  "I’m Kuday, a Computer Science student at Texas A&M University–Victoria, based in Houston. I build software that replaces slow, manual work with tools people actually use.",
+  "I’m a data science intern at Cummins, where I build dashboards, a machine learning model, AI assistants, and internal apps. Before that, I ran operations for an online engraving store and taught myself Python to automate it.",
 ];
-
-export const skills = [
-  ["Languages", "Python, SQL, TypeScript, JavaScript, C/C++, C#, Rust"],
-  [
-    "Data & AI",
-    "Databricks, Delta Lake, PySpark, scikit-learn, Power BI, AWS Bedrock",
-  ],
-  ["Applications", "React, Node.js, FastAPI, .NET, Power Platform, Dataverse"],
-  ["Everyday tools", "Linux, Neovim, Git, Docker, Azure, CLI tooling"],
-] as const;
 
 export const education = {
   monogram: "TAMU-V",
   school: "Texas A&M University–Victoria",
-  degree: "B.S. Computer Science · 3.8 / 4.0 GPA · President’s List",
-  previously: "Previously: Associate of Science, Houston City College · 2022",
+  degree: "B.S. Computer Science · 3.8 GPA · President’s List",
+  previously: "Associate of Science, Houston City College, 2022",
 };
 
+/** Best-known first. Logos live in public/logos. */
+export const stack = [
+  { name: "Python", logo: "python" },
+  { name: "SQL", logo: "sql" },
+  { name: "Databricks", logo: "databricks" },
+  { name: "Power Platform", logo: "powerplatform" },
+  { name: "React", logo: "react" },
+  { name: "TypeScript", logo: "typescript" },
+  { name: "JavaScript", logo: "javascript" },
+  { name: "Linux", logo: "linux" },
+  { name: "Git", logo: "git" },
+  { name: "C / C++", logo: "cplusplus" },
+  { name: "Power BI", logo: "powerbi" },
+  { name: "scikit-learn", logo: "scikitlearn" },
+  { name: "Copilot Studio", logo: "copilotstudio" },
+  { name: "AWS", logo: "aws" },
+  { name: "Azure", logo: "azure" },
+  { name: "Docker", logo: "docker" },
+  { name: "Neovim", logo: "neovim" },
+  { name: "Rust", logo: "rust" },
+  { name: "C#", logo: "csharp" },
+  { name: ".NET", logo: "dotnet" },
+  { name: "Node.js", logo: "nodejs" },
+  { name: "FastAPI", logo: "fastapi" },
+  { name: "Unreal Engine", logo: "unrealengine" },
+  { name: "Unity", logo: "unity" },
+  { name: "MATLAB", logo: "matlab" },
+];
+
+/** Newest first. */
 export const experience = [
   {
     monogram: "C",
@@ -58,12 +53,9 @@ export const experience = [
     role: "Data Science Intern",
     date: "May 2026 — Present",
     location: "Columbus, IN",
-    summary:
-      "Built data pipelines, machine learning models, AI agents, and internal applications with the Components and Software AI department.",
     highlights: [
-      "Automated Turbo Balancer data ingestion and analytics; insights helped raise throughput from 35 to 55 units per day per machine.",
-      "Built a React and Dataverse skills hub, consolidating 5+ tools for an initial team of approximately 30 people.",
-      "Created document-grounded agents for engineering quality, patent review, and project intake.",
+      "Built dashboards and a machine learning model for the turbo balancing line, which helped raise output from 35 to 55 turbos a day per machine.",
+      "Built AI assistants for patent review and project intake, an app that replaced 5+ skills trackers, and the department’s SharePoint site.",
     ],
   },
   {
@@ -72,12 +64,20 @@ export const experience = [
     role: "Operations Manager",
     date: "Jan 2025 — May 2026",
     location: "Katy, TX",
-    summary:
-      "Ran the production floor and built the software behind a business fulfilling more than 1,000 orders a week.",
     highlights: [
-      "Connected three storefronts with a Python ETL pipeline using Amazon and Etsy APIs.",
-      "Used custom analytics to help reduce inventory overhead by 20% and increase sales by 30%.",
-      "Managed production, fulfillment, equipment maintenance, and collaboration with a remote team.",
+      "Ran the production floor on my own for a store shipping 1,000+ orders a week, with a 4.9/5 rating across three storefronts.",
+      "Built the sales and inventory system the business ran on, and kept four laser and UV machines running 99% of the time.",
+    ],
+  },
+  {
+    monogram: "UH",
+    company: "University of Houston",
+    role: "IT Support Specialist",
+    date: "Jan 2023 — Aug 2024",
+    location: "Houston, TX",
+    highlights: [
+      "Fixed hardware and software problems for faculty and students in the College of Technology, with a 95% satisfaction rate.",
+      "Kept 20+ computer labs up to date and set up new labs from unboxed hardware to networked machines.",
     ],
   },
   {
@@ -86,64 +86,101 @@ export const experience = [
     role: "Store Manager & Repair Technician",
     date: "Dec 2020 — May 2022",
     location: "Houston, TX",
-    summary:
-      "Diagnosed and repaired over 100 mobile devices and computers, while managing store operations and customer support.",
     highlights: [
-      "Hands-on hardware diagnostics, precision repairs, and operating system recovery.",
-      "Maintained a 95% repair success rate across a range of devices and platforms.",
+      "Repaired 100+ phones, tablets, and laptops — screens, cameras, back glass, and system recovery — with a 95% success rate.",
+      "Ran the store alone on many shifts, from customer intake to repairs to closing.",
     ],
   },
 ];
 
-export const projects = [
+export const workProjects = [
   {
-    id: "01",
-    name: "Turbo Balancer Intelligence",
-    type: "Data engineering / ML",
+    name: "Turbo Balancer dashboards",
     description:
-      "From raw manufacturing data to useful decisions. An automated Databricks pipeline, live dashboards, and a model that reproduces a balancer’s correction angle approximately 98% of the time.",
-    stack: "Python · Databricks · Delta Lake · scikit-learn",
-    result: "35 → 55 units / day / machine",
-    context: "Built at Cummins",
+      "Live dashboards for Cummins’ turbo balancing machines, replacing hand-entered data and Excel reports. Engineers used them to find the slow spots on the line.",
+    result: "35 → 55 turbos a day per machine",
+    stack: "Databricks · Python · Power BI",
+    context: "Cummins",
   },
   {
-    id: "02",
-    name: "Engineering AI Agents",
-    type: "Applied AI",
+    name: "Balancer correction model",
     description:
-      "Document-grounded agents for engineering quality, patent conflict review, and project intake. Built to turn unstructured information into actionable answers and structured proposals.",
-    stack: "AWS Bedrock · Copilot Studio · Python",
-    result: "Patent review time cut in half",
-    context: "Built at Cummins",
+      "A model that reproduces the correction the balancing machine calculates, matching it about 98% of the time, so the machines Cummins already owns can do more.",
+    result: "About $16M in new machines not needed",
+    stack: "Python · scikit-learn",
+    context: "Cummins",
   },
   {
-    id: "03",
-    name: "Skills & Capabilities Hub",
-    type: "Full-stack development",
+    name: "Engineering AI agents",
     description:
-      "A React code app on Power Apps with a Dataverse backend. Brought five-plus disconnected tools into one place, initially deployed to a 30-person performance engineering team.",
-    stack: "React · Dataverse · Power Apps · Power Automate",
-    result: "~60% estimated reduction in effort",
-    context: "Built at Cummins",
+      "Assistants that compare new patents against Cummins’ own, turn rough project ideas into proposals, and help with quality decisions — all answering from internal documents.",
+    result: "Patent reviews take half the time",
+    stack: "Copilot Studio · AWS Bedrock · Databricks",
+    context: "Cummins",
   },
   {
-    id: "04",
-    name: "E-commerce Data Pipeline",
-    type: "Data engineering",
+    name: "Skills & Capabilities app",
     description:
-      "A self-built pipeline that unified sales and inventory from three storefronts. Connected Amazon and Etsy data to a custom analytics and forecasting dashboard while running day-to-day production.",
-    stack: "Python · Amazon Seller API · Etsy API",
-    result: "5+ hours of manual entry saved / week",
-    context: "Built at Engrave Me Now",
+      "One app for tracking who knows what, replacing 5+ scattered spreadsheets and tools. Rolled out first to a 30-person engineering team.",
+    result: "About 60% less time spent managing skills",
+    stack: "React · Power Apps · Dataverse",
+    context: "Cummins",
   },
   {
-    id: "05",
-    name: "Space Debris Explorer",
-    type: "Visualization / research",
+    name: "CCS AI SharePoint site",
     description:
-      "An interactive exploration of 25 years of NASA orbital debris data. Country and time filters, trend analysis, and a 3D globe make a growing problem tangible.",
-    stack: "MATLAB · NASA datasets · 3D graphics",
-    result: "1st place · Grand Challenge Winter Summit",
-    context: "Academic project · 2022",
+      "The home for AI work across Cummins’ components and software group: news, a list of live and in-progress agents, and training.",
+    result: "Live for a ~20,000-person organization",
+    stack: "SharePoint",
+    context: "Cummins",
+  },
+  {
+    name: "Store sales & inventory system",
+    description:
+      "Pulls orders and stock from Amazon, Etsy, and a third store into one place, forecasts demand, and ranks what to restock before each order.",
+    result: "Inventory costs down 20%, sales up 30%",
+    stack: "Python · Amazon and Etsy APIs",
+    context: "Engrave Me Now",
+  },
+];
+
+export const personalProjects = [
+  {
+    name: "Kessler",
+    description:
+      "Every tracked object in Earth orbit, 1957 to now: a live 3D globe of about 30,000 objects at their real positions, plus charts of how orbit got crowded. It started as my team’s MATLAB app that took 1st place out of 25 teams at the Grand Challenge Winter Summit.",
+    stack: "Next.js · Three.js · FastAPI · AWS",
+    href: "https://kessler.kudayyurter.dev",
+    linkLabel: "kessler.kudayyurter.dev",
+  },
+  {
+    name: "Dispatch",
+    description:
+      "A terminal app for running several coding agents (Claude Code, Codex, opencode) side by side in live, tiled terminals. Early stage.",
+    stack: "Rust",
+    href: "https://github.com/namelessmonarch0/Dispatch",
+    linkLabel: "GitHub",
+  },
+  {
+    name: "Snake Game",
+    description: "A retro snake game.",
+    stack: "C++ · Raylib",
+    href: "https://github.com/namelessmonarch0/SnakeGame",
+    linkLabel: "GitHub",
+  },
+  {
+    name: "Clash of Valor",
+    description: "A duel game that runs in the terminal.",
+    stack: "C++",
+    href: "https://github.com/namelessmonarch0/ClashOfValor",
+    linkLabel: "GitHub",
+  },
+  {
+    name: "Lumon boot splash",
+    description:
+      "A Linux boot animation styled after Lumon, the company in Severance.",
+    stack: "Shell · Plymouth",
+    href: "https://github.com/namelessmonarch0/PlymouthLumonSplash",
+    linkLabel: "GitHub",
   },
 ];

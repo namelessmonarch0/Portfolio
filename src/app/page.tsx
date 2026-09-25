@@ -1,10 +1,7 @@
 import Image from "next/image";
-import portrait from "@/assets/portrait.webp";
 import portraitHead from "@/assets/portrait-head.webp";
-import { CountUp } from "@/components/count-up";
 import { PixelBitmap } from "@/components/pixel-bitmap";
 import { PixelName } from "@/components/pixel-name";
-import { PixelReveal } from "@/components/pixel-reveal";
 import { RevealOnScroll } from "@/components/reveal-on-scroll";
 import { Section } from "@/components/section";
 import { SiteHeader } from "@/components/site-header";
@@ -12,14 +9,12 @@ import {
   about,
   education,
   experience,
-  intro,
   links,
-  projects,
-  results,
-  skills,
+  personalProjects,
+  stack,
+  workProjects,
 } from "@/content/portfolio";
 import { textToBitmap } from "@/lib/pixel-font";
-import techLogos from "@/lib/tech-logos.json";
 
 function Monogram({ text, label }: { text: string; label: string }) {
   return (
@@ -35,52 +30,13 @@ export default function Home() {
       <SiteHeader />
       <main id="top">
         <section className="hero container" aria-labelledby="hero-title">
-          <div className="hero__copy">
-            <h1 id="hero-title">
-              <span className="sr-only">Kuday Yurter</span>
-              <PixelName />
-            </h1>
-            <p className="hero__tagline">{intro.tagline}</p>
-            <p className="hero__headline">{intro.headline}</p>
-            <p className="hero__intro">{intro.body}</p>
-            <div className="hero__actions">
-              <a className="button button--solid" href="#projects">
-                View projects
-              </a>
-              <a className="button" href="#contact">
-                Get in touch
-              </a>
-            </div>
-          </div>
-          <PixelReveal trigger="load" scrollLinked className="hero__portrait">
-            <Image
-              src={portrait}
-              alt="Pixel-art portrait of Kuday Yurter"
-              preload
-              sizes="(max-width: 800px) 70vw, 460px"
-            />
-          </PixelReveal>
+          <h1 id="hero-title">
+            <span className="sr-only">Kuday Yurter</span>
+            <PixelName />
+          </h1>
         </section>
 
-        <RevealOnScroll>
-          <ul className="results container" aria-label="Selected results">
-            {results.map((result) => (
-              <li className="result" key={result.label}>
-                <span className="result__value">
-                  <CountUp
-                    start={result.start}
-                    value={result.value}
-                    prefix={result.prefix}
-                    suffix={result.suffix}
-                  />
-                </span>
-                <span className="result__label">{result.label}</span>
-              </li>
-            ))}
-          </ul>
-        </RevealOnScroll>
-
-        <Section id="about" eyebrow="About" title="A builder at heart.">
+        <Section id="about" title="About">
           <RevealOnScroll>
             <div className="prose">
               {about.map((paragraph) => (
@@ -89,32 +45,9 @@ export default function Home() {
             </div>
           </RevealOnScroll>
           <RevealOnScroll>
-            <ul className="logo-grid" aria-label="Tools I use">
-              {techLogos.map((logo, index) => (
-                <li key={logo.slug}>
-                  <PixelReveal delay={index * 40}>
-                    <PixelBitmap rows={logo.rows} label={logo.title} />
-                  </PixelReveal>
-                  <span aria-hidden="true">{logo.title}</span>
-                </li>
-              ))}
-            </ul>
-          </RevealOnScroll>
-          <RevealOnScroll>
-            <dl className="skills">
-              {skills.map(([group, list]) => (
-                <div key={group}>
-                  <dt>{group}</dt>
-                  <dd>{list}</dd>
-                </div>
-              ))}
-            </dl>
-          </RevealOnScroll>
-          <RevealOnScroll>
             <div className="education">
               <Monogram text={education.monogram} label={education.school} />
               <div>
-                <p className="eyebrow">Education</p>
                 <h3>{education.school}</h3>
                 <p>{education.degree}</p>
                 <p className="muted">{education.previously}</p>
@@ -123,11 +56,25 @@ export default function Home() {
           </RevealOnScroll>
         </Section>
 
-        <Section
-          id="experience"
-          eyebrow="Experience"
-          title="Learning by building."
-        >
+        <Section id="stack" title="Tech stack">
+          <RevealOnScroll>
+            <ol className="stack-grid">
+              {stack.map((tool) => (
+                <li key={tool.logo}>
+                  <Image
+                    src={`/logos/${tool.logo}.svg`}
+                    alt={tool.name}
+                    width={40}
+                    height={40}
+                  />
+                  <span aria-hidden="true">{tool.name}</span>
+                </li>
+              ))}
+            </ol>
+          </RevealOnScroll>
+        </Section>
+
+        <Section id="experience" title="Experience">
           <ol className="timeline">
             {experience.map((job) => (
               <li className="job" key={job.company}>
@@ -139,7 +86,6 @@ export default function Home() {
                     </p>
                     <h3>{job.company}</h3>
                     <p className="job__role">{job.role}</p>
-                    <p>{job.summary}</p>
                     <ul>
                       {job.highlights.map((highlight) => (
                         <li key={highlight}>{highlight}</li>
@@ -162,24 +108,39 @@ export default function Home() {
           </RevealOnScroll>
         </Section>
 
-        <Section id="projects" eyebrow="Projects" title="Useful things, built.">
+        <Section id="projects" title="Work projects">
           <ol className="projects">
-            {projects.map((project) => (
-              <li
-                className="project"
-                id={`project-${project.id}`}
-                key={project.id}
-              >
+            {workProjects.map((project) => (
+              <li className="project" key={project.name}>
                 <RevealOnScroll className="project__body">
-                  <span className="project__number">{project.id}</span>
-                  <div>
-                    <p className="eyebrow">{project.type}</p>
-                    <h3>{project.name}</h3>
-                    <p>{project.description}</p>
-                    <p className="project__result">{project.result}</p>
-                    <p className="project__stack">{project.stack}</p>
-                    <p className="project__context">{project.context}</p>
-                  </div>
+                  <p className="eyebrow">{project.context}</p>
+                  <h3>{project.name}</h3>
+                  <p>{project.description}</p>
+                  <p className="project__result">{project.result}</p>
+                  <p className="project__stack">{project.stack}</p>
+                </RevealOnScroll>
+              </li>
+            ))}
+          </ol>
+        </Section>
+
+        <Section id="personal" title="Personal projects">
+          <ol className="projects">
+            {personalProjects.map((project) => (
+              <li className="project" key={project.name}>
+                <RevealOnScroll className="project__body">
+                  <h3>{project.name}</h3>
+                  <p>{project.description}</p>
+                  <p className="project__stack">{project.stack}</p>
+                  <a
+                    className="text-link project__link"
+                    href={project.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={`${project.name}: ${project.linkLabel}`}
+                  >
+                    {project.linkLabel} <span aria-hidden="true">↗</span>
+                  </a>
                 </RevealOnScroll>
               </li>
             ))}
@@ -191,17 +152,13 @@ export default function Home() {
               target="_blank"
               rel="noreferrer"
             >
-              Find more on GitHub <span aria-hidden="true">↗</span>
+              More on GitHub <span aria-hidden="true">↗</span>
             </a>
           </RevealOnScroll>
         </Section>
 
-        <Section id="contact" eyebrow="Contact" title="Let’s make something.">
+        <Section id="contact" title="Contact">
           <RevealOnScroll>
-            <p className="prose">
-              Have a project in mind, an interesting problem, or a Linux setup
-              to compare? I’d love to hear about it.
-            </p>
             <a className="contact-email" href={`mailto:${links.email}`}>
               {links.email}
             </a>
@@ -223,10 +180,7 @@ export default function Home() {
                 LinkedIn <span aria-hidden="true">↗</span>
               </a>
             </div>
-            <p className="muted contact-note">
-              Based in Houston, Texas. Interested in software, data engineering,
-              and applied AI.
-            </p>
+            <p className="muted contact-note">Based in Houston, Texas.</p>
           </RevealOnScroll>
         </Section>
       </main>

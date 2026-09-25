@@ -9,7 +9,7 @@ test("every glyph is 5 columns by 7 rows of 0/1", () => {
 });
 
 test("has glyphs for the name and every monogram", () => {
-  for (const char of "KUDAYRTECMNIFV-") {
+  for (const char of "KUDAYRTECMNIFVH-") {
     expect(glyphs[char], char).toBeDefined();
   }
 });

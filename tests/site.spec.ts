@@ -8,25 +8,63 @@ const SECTIONS = [
   ["Projects", "projects"],
   ["Contact", "contact"],
 ] as const;
-const COMPANIES = ["Cummins", "Engrave Me Now", "IFixandRepair"];
-const PROJECTS = [
-  "Turbo Balancer Intelligence",
-  "Engineering AI Agents",
-  "Skills & Capabilities Hub",
-  "E-commerce Data Pipeline",
-  "Space Debris Explorer",
+const COMPANIES = [
+  "Cummins",
+  "Engrave Me Now",
+  "University of Houston",
+  "IFixandRepair",
 ];
-const PORTRAIT = "Pixel-art portrait of Kuday Yurter";
+const WORK_PROJECTS = [
+  "Turbo Balancer dashboards",
+  "Balancer correction model",
+  "Engineering AI agents",
+  "Skills & Capabilities app",
+  "CCS AI SharePoint site",
+  "Store sales & inventory system",
+];
+const PERSONAL_PROJECTS = [
+  "Kessler",
+  "Dispatch",
+  "Snake Game",
+  "Clash of Valor",
+  "Lumon boot splash",
+];
+const STACK = [
+  "Python",
+  "SQL",
+  "Databricks",
+  "Power Platform",
+  "React",
+  "TypeScript",
+  "JavaScript",
+  "Linux",
+  "Git",
+  "C / C++",
+  "Power BI",
+  "scikit-learn",
+  "Copilot Studio",
+  "AWS",
+  "Azure",
+  "Docker",
+  "Neovim",
+  "Rust",
+  "C#",
+  ".NET",
+  "Node.js",
+  "FastAPI",
+  "Unreal Engine",
+  "Unity",
+  "MATLAB",
+];
 
 async function expectAllContent(page: Page) {
   await expect(
     page.getByRole("heading", { level: 1, name: "Kuday Yurter" }),
   ).toBeVisible();
-  await expect(page.getByRole("img", { name: PORTRAIT })).toBeVisible();
   for (const [, id] of SECTIONS) {
     await expect(page.locator(`#${id} h2`)).toBeAttached();
   }
-  for (const name of [...COMPANIES, ...PROJECTS]) {
+  for (const name of [...COMPANIES, ...WORK_PROJECTS, ...PERSONAL_PROJECTS]) {
     await expect(page.getByRole("heading", { level: 3, name })).toBeAttached();
   }
   await expect(
@@ -39,6 +77,60 @@ test("renders every section and the key content", async ({ page }) => {
   await expectAllContent(page);
   await expect(page.getByRole("img", { name: "Python" })).toBeAttached();
   await expect(page.getByRole("img", { name: "Cummins" })).toBeAttached();
+});
+
+test("the top of the page is just the name, on one line", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.locator("h1 svg")).toHaveCount(1);
+  await expect(page.getByRole("img", { name: /portrait/i })).toHaveCount(0);
+  await expect(page.getByRole("link", { name: "View projects" })).toHaveCount(
+    0,
+  );
+  await expect(page.locator(".results")).toHaveCount(0);
+});
+
+test("the header portrait is at least 44px and framed", async ({ page }) => {
+  await page.goto("/");
+  const avatar = page.locator(".site-header__home img");
+  const box = await avatar.boundingBox();
+  expect(box?.width).toBeGreaterThanOrEqual(44);
+  await expect(avatar).not.toHaveCSS("image-rendering", "pixelated");
+  await expect(avatar).toHaveCSS("border-radius", "50%");
+});
+
+test("lists every job, newest first", async ({ page }) => {
+  await page.goto("/");
+  expect(await page.locator("#experience h3").allInnerTexts()).toEqual(
+    COMPANIES,
+  );
+});
+
+test("the tech stack uses real logos, best-known first", async ({ page }) => {
+  await page.goto("/");
+  const logos = page.locator("#stack .stack-grid img");
+  expect(
+    await logos.evaluateAll((images) =>
+      images.map((image) => image.getAttribute("alt")),
+    ),
+  ).toEqual(STACK);
+  expect(
+    await logos.evaluateAll((images) =>
+      images.every((image) => image.getAttribute("src")?.endsWith(".svg")),
+    ),
+  ).toBe(true);
+});
+
+test("work and personal projects are separate sections", async ({ page }) => {
+  await page.goto("/");
+  expect(await page.locator("#projects h3").allInnerTexts()).toEqual(
+    WORK_PROJECTS,
+  );
+  expect(await page.locator("#personal h3").allInnerTexts()).toEqual(
+    PERSONAL_PROJECTS,
+  );
+  await expect(
+    page.locator("#personal").getByRole("link", { name: /Kessler/ }),
+  ).toHaveAttribute("href", "https://kessler.kudayyurter.dev");
 });
 
 test.describe("without JavaScript", () => {
@@ -112,7 +204,7 @@ test("a deep link reveals the targeted section", async ({ page }) => {
 
 test("keyboard focus reveals the focused link", async ({ page }) => {
   await page.goto("/");
-  const link = page.getByRole("link", { name: /Find more on GitHub/ });
+  const link = page.getByRole("link", { name: /More on GitHub/ });
   await link.focus();
   await expect(page.locator(".reveal", { has: link })).toHaveClass(
     /is-visible/,
@@ -148,17 +240,6 @@ test.describe("with reduced motion", () => {
   });
 });
 
-test("the portrait resolves from pixels on load", async ({ page }) => {
-  await page.goto("/");
-  const reveal = page.locator(".hero .pixel-reveal");
-  await expect(reveal).toHaveAttribute("data-state", "done");
-  await expect(reveal.locator("canvas")).toBeHidden();
-  await expect(page.getByRole("img", { name: PORTRAIT })).toHaveCSS(
-    "opacity",
-    "1",
-  );
-});
-
 test("section headings resolve when scrolled to", async ({ page }) => {
   await page.goto("/");
   const title = page.locator("#projects .pixel-reveal").first();
@@ -166,31 +247,6 @@ test("section headings resolve when scrolled to", async ({ page }) => {
   await title.scrollIntoViewIfNeeded();
   await expect(title).toHaveAttribute("data-state", "done");
   await expect(page.locator("#projects h2")).toBeVisible();
-});
-
-test("the portrait dissolves on scroll and comes back sharp", async ({
-  page,
-}) => {
-  await page.goto("/");
-  const reveal = page.locator(".hero .pixel-reveal");
-  await expect(reveal).toHaveAttribute("data-state", "done");
-  await page.evaluate(() => window.scrollTo(0, 600));
-  await expect(reveal).toHaveAttribute("data-state", "dissolving");
-  await expect(reveal.locator("canvas")).toBeVisible();
-  await page.evaluate(() => window.scrollTo(0, 0));
-  await expect(reveal).toHaveAttribute("data-state", "done");
-  await expect(reveal.locator("canvas")).toBeHidden();
-});
-
-test("a portrait that fails to load does not leave the hero stuck", async ({
-  page,
-}) => {
-  await page.route(/portrait/, (route) => route.abort());
-  await page.goto("/");
-  await expect(page.locator(".hero .pixel-reveal")).toHaveAttribute(
-    "data-state",
-    "done",
-  );
 });
 
 test("printing shows headings that never revealed", async ({ page }) => {
@@ -212,32 +268,6 @@ test.describe("with reduced motion, no pixel effects", () => {
     expect(
       new Set(await opacities(page, ".pixel-reveal > :first-child")),
     ).toEqual(new Set(["1"]));
-  });
-});
-
-test("results count up once when they come into view", async ({ page }) => {
-  await page.setViewportSize({ width: 1280, height: 600 });
-  await page.goto("/");
-  const first = page.locator(".result__value .count-up__live").first();
-  await expect(first).toHaveText("35 → 35");
-  await first.scrollIntoViewIfNeeded();
-  await expect(first).toHaveText("35 → 55");
-  await expect(page.locator(".result__value .sr-only").first()).toHaveText(
-    "35 → 55",
-  );
-});
-
-test.describe("with reduced motion, results", () => {
-  test.use({ reducedMotion: "reduce" });
-
-  test("show final values immediately", async ({ page }) => {
-    await page.setViewportSize({ width: 1280, height: 600 });
-    await page.goto("/");
-    await expect(page.locator(".result__value .count-up__live")).toHaveText([
-      "35 → 55",
-      "~98%",
-      "50%",
-    ]);
   });
 });
 
@@ -264,22 +294,6 @@ test("content still appears if the page's JavaScript fails to load", async ({
   expect(
     new Set(await opacities(page, ".pixel-reveal > :first-child")),
   ).toEqual(new Set(["1"]));
-});
-
-test("printing before scrolling prints the final result numbers", async ({
-  page,
-}) => {
-  await page.setViewportSize({ width: 1280, height: 600 });
-  await page.goto("/");
-  await expect(page.locator(".hero .pixel-reveal")).toHaveAttribute(
-    "data-state",
-    "done",
-  );
-  await page.emulateMedia({ media: "print" });
-  // Read once: a real print snapshots immediately, it does not wait for a count-up.
-  expect(
-    await page.locator(".result__value [aria-hidden]:visible").allInnerTexts(),
-  ).toEqual(["35 → 55", "~98%", "50%"]);
 });
 
 test("the failsafe does not reveal content early when JavaScript works", async ({
