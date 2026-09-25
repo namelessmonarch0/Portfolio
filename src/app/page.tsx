@@ -1,6 +1,7 @@
 import Image from "next/image";
 import portrait from "@/assets/portrait.webp";
 import portraitHead from "@/assets/portrait-head.webp";
+import { CountUp } from "@/components/count-up";
 import { PixelBitmap } from "@/components/pixel-bitmap";
 import { PixelName } from "@/components/pixel-name";
 import { PixelReveal } from "@/components/pixel-reveal";
@@ -66,7 +67,12 @@ export default function Home() {
             {results.map((result) => (
               <li className="result" key={result.label}>
                 <span className="result__value">
-                  {`${result.prefix}${result.value}${result.suffix}`}
+                  <CountUp
+                    start={result.start}
+                    value={result.value}
+                    prefix={result.prefix}
+                    suffix={result.suffix}
+                  />
                 </span>
                 <span className="result__label">{result.label}</span>
               </li>

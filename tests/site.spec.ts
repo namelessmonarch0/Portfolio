@@ -82,7 +82,8 @@ test("fits a 360px screen with no runtime errors", async ({ page }) => {
   expect(errors).toEqual([]);
 });
 
-const MOTION = "(scripting: enabled) and (prefers-reduced-motion: no-preference)";
+const MOTION =
+  "(scripting: enabled) and (prefers-reduced-motion: no-preference)";
 
 async function opacities(page: Page, selector: string) {
   return page.$$eval(selector, (elements) =>
@@ -92,7 +93,9 @@ async function opacities(page: Page, selector: string) {
 
 test("sections fade in as they scroll into view", async ({ page }) => {
   await page.goto("/");
-  expect(await page.evaluate((query) => matchMedia(query).matches, MOTION)).toBe(true);
+  expect(
+    await page.evaluate((query) => matchMedia(query).matches, MOTION),
+  ).toBe(true);
   const contact = page.locator("#contact .reveal").first();
   await expect(contact).not.toHaveClass(/is-visible/);
   await contact.scrollIntoViewIfNeeded();
@@ -102,17 +105,23 @@ test("sections fade in as they scroll into view", async ({ page }) => {
 
 test("a deep link reveals the targeted section", async ({ page }) => {
   await page.goto("/#projects");
-  await expect(page.locator("#projects .reveal").first()).toHaveClass(/is-visible/);
+  await expect(page.locator("#projects .reveal").first()).toHaveClass(
+    /is-visible/,
+  );
 });
 
 test("keyboard focus reveals the focused link", async ({ page }) => {
   await page.goto("/");
   const link = page.getByRole("link", { name: /Find more on GitHub/ });
   await link.focus();
-  await expect(page.locator(".reveal", { has: link })).toHaveClass(/is-visible/);
+  await expect(page.locator(".reveal", { has: link })).toHaveClass(
+    /is-visible/,
+  );
 });
 
-test("printing shows sections that were never scrolled to", async ({ page }) => {
+test("printing shows sections that were never scrolled to", async ({
+  page,
+}) => {
   await page.goto("/");
   await page.emulateMedia({ media: "print" });
   expect(new Set(await opacities(page, ".reveal"))).toEqual(new Set(["1"]));
@@ -131,7 +140,9 @@ test.describe("with reduced motion", () => {
 
   test("everything is shown immediately", async ({ page }) => {
     await page.goto("/");
-    expect(await page.evaluate((query) => matchMedia(query).matches, MOTION)).toBe(false);
+    expect(
+      await page.evaluate((query) => matchMedia(query).matches, MOTION),
+    ).toBe(false);
     expect(new Set(await opacities(page, ".reveal"))).toEqual(new Set(["1"]));
     expect(await page.locator(".reveal.is-visible").count()).toBe(0);
   });
@@ -142,7 +153,10 @@ test("the portrait resolves from pixels on load", async ({ page }) => {
   const reveal = page.locator(".hero .pixel-reveal");
   await expect(reveal).toHaveAttribute("data-state", "done");
   await expect(reveal.locator("canvas")).toBeHidden();
-  await expect(page.getByRole("img", { name: PORTRAIT })).toHaveCSS("opacity", "1");
+  await expect(page.getByRole("img", { name: PORTRAIT })).toHaveCSS(
+    "opacity",
+    "1",
+  );
 });
 
 test("section headings resolve when scrolled to", async ({ page }) => {
@@ -154,7 +168,9 @@ test("section headings resolve when scrolled to", async ({ page }) => {
   await expect(page.locator("#projects h2")).toBeVisible();
 });
 
-test("the portrait dissolves on scroll and comes back sharp", async ({ page }) => {
+test("the portrait dissolves on scroll and comes back sharp", async ({
+  page,
+}) => {
   await page.goto("/");
   const reveal = page.locator(".hero .pixel-reveal");
   await expect(reveal).toHaveAttribute("data-state", "done");
@@ -166,18 +182,23 @@ test("the portrait dissolves on scroll and comes back sharp", async ({ page }) =
   await expect(reveal.locator("canvas")).toBeHidden();
 });
 
-test("a portrait that fails to load does not leave the hero stuck", async ({ page }) => {
+test("a portrait that fails to load does not leave the hero stuck", async ({
+  page,
+}) => {
   await page.route(/portrait/, (route) => route.abort());
   await page.goto("/");
-  await expect(page.locator(".hero .pixel-reveal")).toHaveAttribute("data-state", "done");
+  await expect(page.locator(".hero .pixel-reveal")).toHaveAttribute(
+    "data-state",
+    "done",
+  );
 });
 
 test("printing shows headings that never revealed", async ({ page }) => {
   await page.goto("/");
   await page.emulateMedia({ media: "print" });
-  expect(new Set(await opacities(page, ".pixel-reveal > :first-child"))).toEqual(
-    new Set(["1"]),
-  );
+  expect(
+    new Set(await opacities(page, ".pixel-reveal > :first-child")),
+  ).toEqual(new Set(["1"]));
   await expect(page.locator(".pixel-reveal__canvas:visible")).toHaveCount(0);
 });
 
@@ -188,8 +209,34 @@ test.describe("with reduced motion, no pixel effects", () => {
     await page.goto("/");
     await expect(page.locator(".pixel-reveal__canvas:visible")).toHaveCount(0);
     expect(await page.locator(".pixel-reveal[data-state]").count()).toBe(0);
-    expect(new Set(await opacities(page, ".pixel-reveal > :first-child"))).toEqual(
-      new Set(["1"]),
-    );
+    expect(
+      new Set(await opacities(page, ".pixel-reveal > :first-child")),
+    ).toEqual(new Set(["1"]));
+  });
+});
+
+test("results count up once when they come into view", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 600 });
+  await page.goto("/");
+  const first = page.locator(".result__value [aria-hidden]").first();
+  await expect(first).toHaveText("35 → 35");
+  await first.scrollIntoViewIfNeeded();
+  await expect(first).toHaveText("35 → 55");
+  await expect(page.locator(".result__value .sr-only").first()).toHaveText(
+    "35 → 55",
+  );
+});
+
+test.describe("with reduced motion, results", () => {
+  test.use({ reducedMotion: "reduce" });
+
+  test("show final values immediately", async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 600 });
+    await page.goto("/");
+    await expect(page.locator(".result__value [aria-hidden]")).toHaveText([
+      "35 → 55",
+      "~98%",
+      "50%",
+    ]);
   });
 });
