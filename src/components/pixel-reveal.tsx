@@ -41,6 +41,7 @@ export function PixelReveal({
     const canvas = canvasRef.current;
     const target = root?.firstElementChild;
     if (!root || !canvas || !target || !motionEnabled()) return;
+    root.dataset.armed = "";
 
     let cancelled = false;
     let frame = 0;

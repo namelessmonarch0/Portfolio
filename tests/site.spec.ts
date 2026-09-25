@@ -218,7 +218,7 @@ test.describe("with reduced motion, no pixel effects", () => {
 test("results count up once when they come into view", async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 600 });
   await page.goto("/");
-  const first = page.locator(".result__value [aria-hidden]").first();
+  const first = page.locator(".result__value .count-up__live").first();
   await expect(first).toHaveText("35 → 35");
   await first.scrollIntoViewIfNeeded();
   await expect(first).toHaveText("35 → 55");
@@ -233,7 +233,7 @@ test.describe("with reduced motion, results", () => {
   test("show final values immediately", async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 600 });
     await page.goto("/");
-    await expect(page.locator(".result__value [aria-hidden]")).toHaveText([
+    await expect(page.locator(".result__value .count-up__live")).toHaveText([
       "35 → 55",
       "~98%",
       "50%",
@@ -252,4 +252,44 @@ test("serves a link-preview image", async ({ page, request }) => {
   const response = await request.get(pathname + search);
   expect(response.status()).toBe(200);
   expect(response.headers()["content-type"]).toContain("image/png");
+});
+
+test("content still appears if the page's JavaScript fails to load", async ({
+  page,
+}) => {
+  await page.route(/\/_next\/static\/chunks\/.*\.js/, (route) => route.abort());
+  await page.goto("/");
+  await page.waitForTimeout(3500);
+  expect(new Set(await opacities(page, ".reveal"))).toEqual(new Set(["1"]));
+  expect(
+    new Set(await opacities(page, ".pixel-reveal > :first-child")),
+  ).toEqual(new Set(["1"]));
+});
+
+test("printing before scrolling prints the final result numbers", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1280, height: 600 });
+  await page.goto("/");
+  await expect(page.locator(".hero .pixel-reveal")).toHaveAttribute(
+    "data-state",
+    "done",
+  );
+  await page.emulateMedia({ media: "print" });
+  // Read once: a real print snapshots immediately, it does not wait for a count-up.
+  expect(
+    await page.locator(".result__value [aria-hidden]:visible").allInnerTexts(),
+  ).toEqual(["35 → 55", "~98%", "50%"]);
+});
+
+test("the failsafe does not reveal content early when JavaScript works", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.waitForTimeout(3500);
+  await expect(page.locator("#contact .reveal").first()).toHaveCSS(
+    "opacity",
+    "0",
+  );
+  await expect(page.locator("#contact h2")).toHaveCSS("opacity", "0");
 });

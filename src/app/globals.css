@@ -238,6 +238,9 @@ a {
   font-variant-numeric: tabular-nums;
   line-height: 1.1;
 }
+.count-up__print {
+  display: none;
+}
 .result__label {
   font-size: 0.875rem;
   color: var(--muted);
@@ -528,9 +531,17 @@ a {
       opacity 0.6s cubic-bezier(0.2, 0.7, 0.2, 1),
       transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
   }
+  /*
+   * Hidden content shows itself after 3s unless a component has armed it
+   * (data-armed), so a script that never loads or runs cannot hide the page.
+   */
   .reveal:not(.is-visible) {
     opacity: 0;
     transform: translateY(12px);
+    animation: failsafe-show 0s 3s forwards;
+  }
+  .reveal[data-armed]:not(.is-visible) {
+    animation: none;
   }
 
   .pixel-name rect {
@@ -539,6 +550,17 @@ a {
 
   .pixel-reveal:not([data-state="done"]) > :first-child {
     opacity: 0;
+    animation: failsafe-show 0s 3s forwards;
+  }
+  .pixel-reveal[data-armed]:not([data-state="done"]) > :first-child {
+    animation: none;
+  }
+}
+
+@keyframes failsafe-show {
+  to {
+    opacity: 1;
+    transform: none;
   }
 }
 
@@ -562,5 +584,11 @@ a {
   }
   .pixel-reveal__canvas {
     display: none !important;
+  }
+  .count-up__live {
+    display: none;
+  }
+  .count-up__print {
+    display: inline;
   }
 }

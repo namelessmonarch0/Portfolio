@@ -16,6 +16,7 @@ export function RevealOnScroll({
   useEffect(() => {
     const element = ref.current;
     if (!element || !motionEnabled()) return;
+    element.dataset.armed = "";
     return onceInView(element, () => element.classList.add("is-visible"));
   }, []);
 

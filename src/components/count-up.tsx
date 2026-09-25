@@ -48,7 +48,11 @@ export function CountUp({
   return (
     <>
       <span className="sr-only">{final}</span>
-      <span ref={ref} aria-hidden="true">
+      <span ref={ref} className="count-up__live" aria-hidden="true">
+        {final}
+      </span>
+      {/* The live number may be mid-count or not started when printing. */}
+      <span className="count-up__print" aria-hidden="true">
         {final}
       </span>
     </>
