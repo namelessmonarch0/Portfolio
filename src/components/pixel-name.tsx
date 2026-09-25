@@ -1,40 +1,45 @@
-const glyphs: Record<string, string[]> = {
-  K: ["10001", "10010", "10100", "11000", "10100", "10010", "10001"],
-  U: ["10001", "10001", "10001", "10001", "10001", "10001", "01110"],
-  D: ["11110", "10001", "10001", "10001", "10001", "10001", "11110"],
-  A: ["01110", "10001", "10001", "11111", "10001", "10001", "10001"],
-  Y: ["10001", "10001", "01010", "00100", "00100", "00100", "00100"],
-  R: ["11110", "10001", "10001", "11110", "10100", "10010", "10001"],
-  T: ["11111", "00100", "00100", "00100", "00100", "00100", "00100"],
-  E: ["11111", "10000", "10000", "11110", "10000", "10000", "11111"],
-};
+import type { CSSProperties } from "react";
+import { textToBitmap } from "@/lib/pixel-font";
+
+const WORDS = ["KUDAY", "YURTER"];
+const DRAW_MS = 800;
+
+// Scatters dot start times across DRAW_MS in a fixed order, so server and client markup match.
+function dotDelay(index: number, total: number) {
+  return Math.round((((index * 37) % total) / total) * DRAW_MS);
+}
 
 export function PixelName() {
   return (
     <span className="pixel-name" aria-hidden="true">
-      {["KUDAY", "YURTER"].map((word) => (
-        <svg
-          key={word}
-          viewBox={`0 0 ${word.length * 6 - 1} 7`}
-          fill="currentColor"
-        >
-          {[...word].flatMap((letter, index) =>
-            glyphs[letter].flatMap((row, y) =>
-              [...row].map((pixel, x) =>
-                pixel === "1" ? (
-                  <rect
-                    key={`${index}-${x}-${y}`}
-                    x={index * 6 + x}
-                    y={y}
-                    width=".91"
-                    height=".91"
-                  />
-                ) : null,
-              ),
-            ),
-          )}
-        </svg>
-      ))}
+      {WORDS.map((word) => {
+        const rows = textToBitmap(word);
+        const dots = rows.flatMap((row, y) =>
+          [...row].flatMap((pixel, x) => (pixel === "1" ? [{ x, y }] : [])),
+        );
+        return (
+          <svg
+            key={word}
+            viewBox={`0 0 ${rows[0].length} ${rows.length}`}
+            fill="currentColor"
+          >
+            {dots.map(({ x, y }, index) => (
+              <rect
+                key={`${x}-${y}`}
+                x={x}
+                y={y}
+                width=".91"
+                height=".91"
+                style={
+                  {
+                    "--delay": `${dotDelay(index, dots.length)}ms`,
+                  } as CSSProperties
+                }
+              />
+            ))}
+          </svg>
+        );
+      })}
     </span>
   );
 }
