@@ -240,3 +240,16 @@ test.describe("with reduced motion, results", () => {
     ]);
   });
 });
+
+test("serves a link-preview image", async ({ page, request }) => {
+  await page.goto("/");
+  const content = await page
+    .locator('meta[property="og:image"]')
+    .getAttribute("content");
+  expect(content).toBeTruthy();
+  // metadataBase points at production; fetch the same path from the local server.
+  const { pathname, search } = new URL(content!);
+  const response = await request.get(pathname + search);
+  expect(response.status()).toBe(200);
+  expect(response.headers()["content-type"]).toContain("image/png");
+});

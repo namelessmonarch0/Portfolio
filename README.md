@@ -1,6 +1,6 @@
-# Kuday Yurter — personal terminal
+# Kuday Yurter — portfolio
 
-A portfolio you explore through a CLI. Built with Next.js 16, React 19, and a phosphor CRT display inspired by [Omarchy CRT](https://crt.omarchy.org/).
+Source for [kudayyurter.dev](https://kudayyurter.dev): a single page on black, with a pixel-art portrait, pixel lettering, and pixel logos that resolve as you scroll. Built with Next.js 16 and React 19; no animation libraries.
 
 ## Development
 
@@ -9,39 +9,18 @@ npm install
 npm run dev
 ```
 
-Open [localhost:3000](http://localhost:3000). If your environment restricts Turbopack’s CSS worker, use `npm run dev -- --webpack` or `npm run build -- --webpack`. Google Fonts need network access during a fresh build.
+Open [localhost:3000](http://localhost:3000).
 
-## Using the terminal
+## How it fits together
 
-The site starts with a short boot sequence, a welcome banner, and a command prompt. Skip the boot with Escape or the skip button. Commands print into a scrolling transcript; clickable command hints support touch and visitors unfamiliar with terminals.
+- `src/content/portfolio.ts`: all copy (bio, experience, projects, results, links). Edit this to change what the page says.
+- `src/app/page.tsx`: page markup, server-rendered, so the page is complete without JavaScript.
+- `src/components/pixel-reveal.tsx`: canvas overlay that resolves its child from pixel blocks; the hero portrait also dissolves on scroll.
+- `src/components/reveal-on-scroll.tsx`, `count-up.tsx`, `site-header.tsx`: the other small motion pieces.
+- `src/lib/pixel-font.ts`: 5×7 glyphs for the name and company monograms.
+- `src/lib/tech-logos.json`: 24×24 logo bitmaps generated from [Simple Icons](https://simpleicons.org) (CC0). Regenerate with `node scripts/build-tech-logos.mjs` (needs ImageMagick).
 
-| Command | Output |
-| --- | --- |
-| `help`, `ls` | Commands and keyboard shortcuts |
-| `about`, `cat about.txt` | Biography, skills, and education |
-| `experience`, `cat experience.log` | Roles and results |
-| `projects`, `projects 03` | Selected work, optionally scrolled to one project |
-| `contact`, `cat contact.txt` | Email and social links |
-| `home`, `whoami` | Welcome banner or short introduction |
-| `cd projects/` | Alias for a portfolio section |
-| `theme` | Switch green / amber phosphor |
-| `crt` | Toggle scanlines, glow, RGB fringing, and scan sweep |
-| `clear` | Clear output while retaining command history |
-| `reboot` | Reset the visitor session and replay startup |
-
-Use ↑/↓ for command history, Tab to complete a command, and Ctrl+L to clear. Shift+Tab always moves focus backward; Tab on an empty or completed command moves forward normally.
-
-Display preferences are saved locally. Reduced motion disables animation and skips startup. On touch devices, visiting the page does not automatically open the software keyboard. Content remains available without JavaScript and in print.
-
-Share a section with `/#about` or a specific project with `/#project-03`. Project links remain valid after reload. Company projects are summaries; GitHub links point to the public profile.
-
-## Files
-
-- `src/app/page.tsx`: biography, experience, projects, skills, and contact links curated from `~/Resume/knowledge_base.md`. The private source is not bundled or required at runtime.
-- `src/components/terminal.tsx`: boot, transcript, command handling, keyboard controls, hash navigation, and display preferences.
-- `src/components/pixel-name.tsx`: custom SVG pixel lettering.
-- `src/app/globals.css`: content layout, terminal styling, CRT effects, responsive rules, and print styles.
-- `tests/terminal.spec.ts`: browser coverage for CLI interactions, startup, deep links, preferences, responsive layout, print, and no-JavaScript access.
+Motion only runs when `(scripting: enabled) and (prefers-reduced-motion: no-preference)` matches; otherwise, and in print, everything shows in its final state.
 
 ## Validation
 
@@ -50,7 +29,9 @@ npx playwright install chromium
 npm run test:e2e
 npm run lint
 npx tsc --noEmit
-npm run build -- --webpack
+npm run build
 ```
 
-The browser tests start a local server when needed. The application is statically prerendered and requires no database, API keys, or external content service.
+## Deploying
+
+Pushes to `main` deploy to kudayyurter.dev on Vercel. Preview deployments are disabled.
