@@ -81,3 +81,58 @@ test("fits a 360px screen with no runtime errors", async ({ page }) => {
   expect(overflow).toBe(0);
   expect(errors).toEqual([]);
 });
+
+const MOTION = "(scripting: enabled) and (prefers-reduced-motion: no-preference)";
+
+async function opacities(page: Page, selector: string) {
+  return page.$$eval(selector, (elements) =>
+    elements.map((element) => getComputedStyle(element).opacity),
+  );
+}
+
+test("sections fade in as they scroll into view", async ({ page }) => {
+  await page.goto("/");
+  expect(await page.evaluate((query) => matchMedia(query).matches, MOTION)).toBe(true);
+  const contact = page.locator("#contact .reveal").first();
+  await expect(contact).not.toHaveClass(/is-visible/);
+  await contact.scrollIntoViewIfNeeded();
+  await expect(contact).toHaveClass(/is-visible/);
+  await expect(contact).toHaveCSS("opacity", "1");
+});
+
+test("a deep link reveals the targeted section", async ({ page }) => {
+  await page.goto("/#projects");
+  await expect(page.locator("#projects .reveal").first()).toHaveClass(/is-visible/);
+});
+
+test("keyboard focus reveals the focused link", async ({ page }) => {
+  await page.goto("/");
+  const link = page.getByRole("link", { name: /Find more on GitHub/ });
+  await link.focus();
+  await expect(page.locator(".reveal", { has: link })).toHaveClass(/is-visible/);
+});
+
+test("printing shows sections that were never scrolled to", async ({ page }) => {
+  await page.goto("/");
+  await page.emulateMedia({ media: "print" });
+  expect(new Set(await opacities(page, ".reveal"))).toEqual(new Set(["1"]));
+});
+
+test("header gets a hairline once the page scrolls", async ({ page }) => {
+  await page.goto("/");
+  const header = page.locator(".site-header");
+  await expect(header).toHaveAttribute("data-scrolled", "false");
+  await page.evaluate(() => window.scrollTo(0, 400));
+  await expect(header).toHaveAttribute("data-scrolled", "true");
+});
+
+test.describe("with reduced motion", () => {
+  test.use({ reducedMotion: "reduce" });
+
+  test("everything is shown immediately", async ({ page }) => {
+    await page.goto("/");
+    expect(await page.evaluate((query) => matchMedia(query).matches, MOTION)).toBe(false);
+    expect(new Set(await opacities(page, ".reveal"))).toEqual(new Set(["1"]));
+    expect(await page.locator(".reveal.is-visible").count()).toBe(0);
+  });
+});

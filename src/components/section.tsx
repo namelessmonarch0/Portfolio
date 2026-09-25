@@ -12,7 +12,11 @@ export function Section({
   children: ReactNode;
 }) {
   return (
-    <section id={id} className="section container" aria-labelledby={`${id}-title`}>
+    <section
+      id={id}
+      className="section container"
+      aria-labelledby={`${id}-title`}
+    >
       <p className="eyebrow">{eyebrow}</p>
       <h2 id={`${id}-title`} className="section__title">
         {title}

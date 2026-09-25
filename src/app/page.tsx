@@ -3,6 +3,7 @@ import portrait from "@/assets/portrait.webp";
 import portraitHead from "@/assets/portrait-head.webp";
 import { PixelBitmap } from "@/components/pixel-bitmap";
 import { PixelName } from "@/components/pixel-name";
+import { RevealOnScroll } from "@/components/reveal-on-scroll";
 import { Section } from "@/components/section";
 import { SiteHeader } from "@/components/site-header";
 import {
@@ -59,117 +60,165 @@ export default function Home() {
           </div>
         </section>
 
-        <ul className="results container" aria-label="Selected results">
-          {results.map((result) => (
-            <li className="result" key={result.label}>
-              <span className="result__value">
-                {`${result.prefix}${result.value}${result.suffix}`}
-              </span>
-              <span className="result__label">{result.label}</span>
-            </li>
-          ))}
-        </ul>
-
-        <Section id="about" eyebrow="About" title="A builder at heart.">
-          <div className="prose">
-            {about.map((paragraph) => (
-              <p key={paragraph.slice(0, 24)}>{paragraph}</p>
-            ))}
-          </div>
-          <ul className="logo-grid" aria-label="Tools I use">
-            {techLogos.map((logo) => (
-              <li key={logo.slug}>
-                <PixelBitmap rows={logo.rows} label={logo.title} />
-                <span aria-hidden="true">{logo.title}</span>
+        <RevealOnScroll>
+          <ul className="results container" aria-label="Selected results">
+            {results.map((result) => (
+              <li className="result" key={result.label}>
+                <span className="result__value">
+                  {`${result.prefix}${result.value}${result.suffix}`}
+                </span>
+                <span className="result__label">{result.label}</span>
               </li>
             ))}
           </ul>
-          <dl className="skills">
-            {skills.map(([group, list]) => (
-              <div key={group}>
-                <dt>{group}</dt>
-                <dd>{list}</dd>
-              </div>
-            ))}
-          </dl>
-          <div className="education">
-            <Monogram text={education.monogram} label={education.school} />
-            <div>
-              <p className="eyebrow">Education</p>
-              <h3>{education.school}</h3>
-              <p>{education.degree}</p>
-              <p className="muted">{education.previously}</p>
+        </RevealOnScroll>
+
+        <Section id="about" eyebrow="About" title="A builder at heart.">
+          <RevealOnScroll>
+            <div className="prose">
+              {about.map((paragraph) => (
+                <p key={paragraph.slice(0, 24)}>{paragraph}</p>
+              ))}
             </div>
-          </div>
+          </RevealOnScroll>
+          <RevealOnScroll>
+            <ul className="logo-grid" aria-label="Tools I use">
+              {techLogos.map((logo) => (
+                <li key={logo.slug}>
+                  <PixelBitmap rows={logo.rows} label={logo.title} />
+                  <span aria-hidden="true">{logo.title}</span>
+                </li>
+              ))}
+            </ul>
+          </RevealOnScroll>
+          <RevealOnScroll>
+            <dl className="skills">
+              {skills.map(([group, list]) => (
+                <div key={group}>
+                  <dt>{group}</dt>
+                  <dd>{list}</dd>
+                </div>
+              ))}
+            </dl>
+          </RevealOnScroll>
+          <RevealOnScroll>
+            <div className="education">
+              <Monogram text={education.monogram} label={education.school} />
+              <div>
+                <p className="eyebrow">Education</p>
+                <h3>{education.school}</h3>
+                <p>{education.degree}</p>
+                <p className="muted">{education.previously}</p>
+              </div>
+            </div>
+          </RevealOnScroll>
         </Section>
 
-        <Section id="experience" eyebrow="Experience" title="Learning by building.">
+        <Section
+          id="experience"
+          eyebrow="Experience"
+          title="Learning by building."
+        >
           <ol className="timeline">
             {experience.map((job) => (
               <li className="job" key={job.company}>
-                <Monogram text={job.monogram} label={job.company} />
-                <div>
-                  <p className="job__meta">
-                    {job.date} · {job.location}
-                  </p>
-                  <h3>{job.company}</h3>
-                  <p className="job__role">{job.role}</p>
-                  <p>{job.summary}</p>
-                  <ul>
-                    {job.highlights.map((highlight) => (
-                      <li key={highlight}>{highlight}</li>
-                    ))}
-                  </ul>
-                </div>
+                <RevealOnScroll className="job__body">
+                  <Monogram text={job.monogram} label={job.company} />
+                  <div>
+                    <p className="job__meta">
+                      {job.date} · {job.location}
+                    </p>
+                    <h3>{job.company}</h3>
+                    <p className="job__role">{job.role}</p>
+                    <p>{job.summary}</p>
+                    <ul>
+                      {job.highlights.map((highlight) => (
+                        <li key={highlight}>{highlight}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </RevealOnScroll>
               </li>
             ))}
           </ol>
-          <a className="text-link" href={links.linkedin} target="_blank" rel="noreferrer">
-            View my LinkedIn <span aria-hidden="true">↗</span>
-          </a>
+          <RevealOnScroll>
+            <a
+              className="text-link"
+              href={links.linkedin}
+              target="_blank"
+              rel="noreferrer"
+            >
+              View my LinkedIn <span aria-hidden="true">↗</span>
+            </a>
+          </RevealOnScroll>
         </Section>
 
         <Section id="projects" eyebrow="Projects" title="Useful things, built.">
           <ol className="projects">
             {projects.map((project) => (
-              <li className="project" id={`project-${project.id}`} key={project.id}>
-                <span className="project__number">{project.id}</span>
-                <div>
-                  <p className="eyebrow">{project.type}</p>
-                  <h3>{project.name}</h3>
-                  <p>{project.description}</p>
-                  <p className="project__result">{project.result}</p>
-                  <p className="project__stack">{project.stack}</p>
-                  <p className="project__context">{project.context}</p>
-                </div>
+              <li
+                className="project"
+                id={`project-${project.id}`}
+                key={project.id}
+              >
+                <RevealOnScroll className="project__body">
+                  <span className="project__number">{project.id}</span>
+                  <div>
+                    <p className="eyebrow">{project.type}</p>
+                    <h3>{project.name}</h3>
+                    <p>{project.description}</p>
+                    <p className="project__result">{project.result}</p>
+                    <p className="project__stack">{project.stack}</p>
+                    <p className="project__context">{project.context}</p>
+                  </div>
+                </RevealOnScroll>
               </li>
             ))}
           </ol>
-          <a className="text-link" href={links.github} target="_blank" rel="noreferrer">
-            Find more on GitHub <span aria-hidden="true">↗</span>
-          </a>
+          <RevealOnScroll>
+            <a
+              className="text-link"
+              href={links.github}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Find more on GitHub <span aria-hidden="true">↗</span>
+            </a>
+          </RevealOnScroll>
         </Section>
 
         <Section id="contact" eyebrow="Contact" title="Let’s make something.">
-          <p className="prose">
-            Have a project in mind, an interesting problem, or a Linux setup to
-            compare? I’d love to hear about it.
-          </p>
-          <a className="contact-email" href={`mailto:${links.email}`}>
-            {links.email}
-          </a>
-          <div className="contact-links">
-            <a className="button" href={links.github} target="_blank" rel="noreferrer">
-              GitHub <span aria-hidden="true">↗</span>
+          <RevealOnScroll>
+            <p className="prose">
+              Have a project in mind, an interesting problem, or a Linux setup
+              to compare? I’d love to hear about it.
+            </p>
+            <a className="contact-email" href={`mailto:${links.email}`}>
+              {links.email}
             </a>
-            <a className="button" href={links.linkedin} target="_blank" rel="noreferrer">
-              LinkedIn <span aria-hidden="true">↗</span>
-            </a>
-          </div>
-          <p className="muted contact-note">
-            Based in Houston, Texas. Interested in software, data engineering,
-            and applied AI.
-          </p>
+            <div className="contact-links">
+              <a
+                className="button"
+                href={links.github}
+                target="_blank"
+                rel="noreferrer"
+              >
+                GitHub <span aria-hidden="true">↗</span>
+              </a>
+              <a
+                className="button"
+                href={links.linkedin}
+                target="_blank"
+                rel="noreferrer"
+              >
+                LinkedIn <span aria-hidden="true">↗</span>
+              </a>
+            </div>
+            <p className="muted contact-note">
+              Based in Houston, Texas. Interested in software, data engineering,
+              and applied AI.
+            </p>
+          </RevealOnScroll>
         </Section>
       </main>
       <footer className="site-footer">

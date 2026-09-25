@@ -17,7 +17,13 @@ export const results: {
   suffix: string;
   label: string;
 }[] = [
-  { start: 35, value: 55, prefix: "35 → ", suffix: "", label: "Units per day, per machine" },
+  {
+    start: 35,
+    value: 55,
+    prefix: "35 → ",
+    suffix: "",
+    label: "Units per day, per machine",
+  },
   { value: 98, prefix: "~", suffix: "%", label: "Correction-angle match" },
   { value: 50, prefix: "", suffix: "%", label: "Less time on patent reviews" },
 ];
@@ -30,7 +36,10 @@ export const about = [
 
 export const skills = [
   ["Languages", "Python, SQL, TypeScript, JavaScript, C/C++, C#, Rust"],
-  ["Data & AI", "Databricks, Delta Lake, PySpark, scikit-learn, Power BI, AWS Bedrock"],
+  [
+    "Data & AI",
+    "Databricks, Delta Lake, PySpark, scikit-learn, Power BI, AWS Bedrock",
+  ],
   ["Applications", "React, Node.js, FastAPI, .NET, Power Platform, Dataverse"],
   ["Everyday tools", "Linux, Neovim, Git, Docker, Azure, CLI tooling"],
 ] as const;
