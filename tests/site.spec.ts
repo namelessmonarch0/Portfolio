@@ -136,3 +136,60 @@ test.describe("with reduced motion", () => {
     expect(await page.locator(".reveal.is-visible").count()).toBe(0);
   });
 });
+
+test("the portrait resolves from pixels on load", async ({ page }) => {
+  await page.goto("/");
+  const reveal = page.locator(".hero .pixel-reveal");
+  await expect(reveal).toHaveAttribute("data-state", "done");
+  await expect(reveal.locator("canvas")).toBeHidden();
+  await expect(page.getByRole("img", { name: PORTRAIT })).toHaveCSS("opacity", "1");
+});
+
+test("section headings resolve when scrolled to", async ({ page }) => {
+  await page.goto("/");
+  const title = page.locator("#projects .pixel-reveal").first();
+  expect(await title.getAttribute("data-state")).toBeNull();
+  await title.scrollIntoViewIfNeeded();
+  await expect(title).toHaveAttribute("data-state", "done");
+  await expect(page.locator("#projects h2")).toBeVisible();
+});
+
+test("the portrait dissolves on scroll and comes back sharp", async ({ page }) => {
+  await page.goto("/");
+  const reveal = page.locator(".hero .pixel-reveal");
+  await expect(reveal).toHaveAttribute("data-state", "done");
+  await page.evaluate(() => window.scrollTo(0, 600));
+  await expect(reveal).toHaveAttribute("data-state", "dissolving");
+  await expect(reveal.locator("canvas")).toBeVisible();
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await expect(reveal).toHaveAttribute("data-state", "done");
+  await expect(reveal.locator("canvas")).toBeHidden();
+});
+
+test("a portrait that fails to load does not leave the hero stuck", async ({ page }) => {
+  await page.route(/portrait/, (route) => route.abort());
+  await page.goto("/");
+  await expect(page.locator(".hero .pixel-reveal")).toHaveAttribute("data-state", "done");
+});
+
+test("printing shows headings that never revealed", async ({ page }) => {
+  await page.goto("/");
+  await page.emulateMedia({ media: "print" });
+  expect(new Set(await opacities(page, ".pixel-reveal > :first-child"))).toEqual(
+    new Set(["1"]),
+  );
+  await expect(page.locator(".pixel-reveal__canvas:visible")).toHaveCount(0);
+});
+
+test.describe("with reduced motion, no pixel effects", () => {
+  test.use({ reducedMotion: "reduce" });
+
+  test("no canvas shows and nothing waits to reveal", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.locator(".pixel-reveal__canvas:visible")).toHaveCount(0);
+    expect(await page.locator(".pixel-reveal[data-state]").count()).toBe(0);
+    expect(new Set(await opacities(page, ".pixel-reveal > :first-child"))).toEqual(
+      new Set(["1"]),
+    );
+  });
+});

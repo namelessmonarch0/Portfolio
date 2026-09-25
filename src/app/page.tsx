@@ -3,6 +3,7 @@ import portrait from "@/assets/portrait.webp";
 import portraitHead from "@/assets/portrait-head.webp";
 import { PixelBitmap } from "@/components/pixel-bitmap";
 import { PixelName } from "@/components/pixel-name";
+import { PixelReveal } from "@/components/pixel-reveal";
 import { RevealOnScroll } from "@/components/reveal-on-scroll";
 import { Section } from "@/components/section";
 import { SiteHeader } from "@/components/site-header";
@@ -50,14 +51,14 @@ export default function Home() {
               </a>
             </div>
           </div>
-          <div className="hero__portrait">
+          <PixelReveal trigger="load" scrollLinked className="hero__portrait">
             <Image
               src={portrait}
               alt="Pixel-art portrait of Kuday Yurter"
               preload
               sizes="(max-width: 800px) 70vw, 460px"
             />
-          </div>
+          </PixelReveal>
         </section>
 
         <RevealOnScroll>
@@ -83,9 +84,11 @@ export default function Home() {
           </RevealOnScroll>
           <RevealOnScroll>
             <ul className="logo-grid" aria-label="Tools I use">
-              {techLogos.map((logo) => (
+              {techLogos.map((logo, index) => (
                 <li key={logo.slug}>
-                  <PixelBitmap rows={logo.rows} label={logo.title} />
+                  <PixelReveal delay={index * 40}>
+                    <PixelBitmap rows={logo.rows} label={logo.title} />
+                  </PixelReveal>
                   <span aria-hidden="true">{logo.title}</span>
                 </li>
               ))}
