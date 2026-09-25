@@ -22,7 +22,6 @@ export const metadata: Metadata = {
       "Pipelines, AI agents, and software that makes things work better. A personal corner of the internet, with a little phosphor glow.",
     type: "website",
   },
-  icons: { icon: "/icon.svg" },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
