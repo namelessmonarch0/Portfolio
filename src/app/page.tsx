@@ -13,13 +13,31 @@ import {
   personalProjects,
   stack,
   workProjects,
+  type Logo,
 } from "@/content/portfolio";
 import { textToBitmap } from "@/lib/pixel-font";
 
-function Monogram({ text, label }: { text: string; label: string }) {
+function Monogram({
+  text,
+  label,
+  logo,
+}: {
+  text: string;
+  label: string;
+  logo?: Logo;
+}) {
   return (
     <span className="monogram">
-      <PixelBitmap rows={textToBitmap(text)} label={label} />
+      {logo ? (
+        <Image
+          src={logo.src}
+          alt={label}
+          width={logo.width}
+          height={logo.height}
+        />
+      ) : (
+        <PixelBitmap rows={textToBitmap(text)} label={label} />
+      )}
     </span>
   );
 }
@@ -46,7 +64,11 @@ export default function Home() {
           </RevealOnScroll>
           <RevealOnScroll>
             <div className="education">
-              <Monogram text={education.monogram} label={education.school} />
+              <Monogram
+                text={education.monogram}
+                label={education.school}
+                logo={education.logo}
+              />
               <div>
                 <h3>{education.school}</h3>
                 <p>{education.degree}</p>
@@ -79,11 +101,13 @@ export default function Home() {
             {experience.map((job) => (
               <li className="job" key={job.company}>
                 <RevealOnScroll className="job__body">
-                  <Monogram text={job.monogram} label={job.company} />
+                  <Monogram
+                    text={job.monogram}
+                    label={job.company}
+                    logo={job.logo}
+                  />
                   <div>
-                    <p className="job__meta">
-                      {job.date} · {job.location}
-                    </p>
+                    <p className="job__meta">{job.date}</p>
                     <h3>{job.company}</h3>
                     <p className="job__role">{job.role}</p>
                     <ul>
@@ -159,28 +183,47 @@ export default function Home() {
 
         <Section id="contact" title="Contact">
           <RevealOnScroll>
-            <a className="contact-email" href={`mailto:${links.email}`}>
-              {links.email}
-            </a>
             <div className="contact-links">
-              <a
-                className="button"
-                href={links.github}
-                target="_blank"
-                rel="noreferrer"
-              >
-                GitHub <span aria-hidden="true">↗</span>
-              </a>
-              <a
-                className="button"
-                href={links.linkedin}
-                target="_blank"
-                rel="noreferrer"
-              >
-                LinkedIn <span aria-hidden="true">↗</span>
-              </a>
+              {[
+                {
+                  label: links.email,
+                  href: `mailto:${links.email}`,
+                  logo: "gmail",
+                  external: false,
+                },
+                {
+                  label: "GitHub",
+                  href: links.github,
+                  logo: "github",
+                  external: true,
+                },
+                {
+                  label: "LinkedIn",
+                  href: links.linkedin,
+                  logo: "linkedin",
+                  external: true,
+                },
+              ].map((contact) => (
+                <a
+                  key={contact.logo}
+                  className="button"
+                  href={contact.href}
+                  {...(contact.external
+                    ? { target: "_blank", rel: "noreferrer" }
+                    : {})}
+                >
+                  <Image
+                    src={`/logos/${contact.logo}.svg`}
+                    alt=""
+                    width={18}
+                    height={18}
+                  />
+                  {contact.label}
+                  {contact.external && <span aria-hidden="true">↗</span>}
+                </a>
+              ))}
             </div>
-            <p className="muted contact-note">Based in Houston, Texas.</p>
+            <p className="muted contact-note">Based in the US.</p>
           </RevealOnScroll>
         </Section>
       </main>

@@ -307,3 +307,65 @@ test("the failsafe does not reveal content early when JavaScript works", async (
   );
   await expect(page.locator("#contact h2")).toHaveCSS("opacity", "0");
 });
+
+test("Cummins and University of Houston show their real logos", async ({
+  page,
+}) => {
+  await page.goto("/");
+  for (const [name, file] of [
+    ["Cummins", "cummins.svg"],
+    ["University of Houston", "uh.svg"],
+  ]) {
+    await expect(
+      page.locator(`#experience img[alt="${name}"]`),
+    ).toHaveAttribute("src", new RegExp(`/logos/${file}$`));
+  }
+  await expect(page.locator("#experience svg[aria-label]")).toHaveCount(2);
+});
+
+test("education shows the school's logo", async ({ page }) => {
+  await page.goto("/");
+  await expect(
+    page.locator('.education img[alt="Texas A&M University–Victoria"]'),
+  ).toHaveAttribute("src", /\/logos\/tamuv\.svg$/);
+});
+
+test("never says where in the US Kuday lives", async ({ page }) => {
+  await page.goto("/");
+  const text = (await page.locator("body").innerText())
+    .replaceAll("University of Houston", "")
+    .replaceAll("Houston City College", "");
+  expect(text).not.toMatch(/Houston|Katy|Columbus|, TX|, IN\b/);
+  expect(text).toContain("Based in the US.");
+  const description = await page
+    .locator('meta[name="description"]')
+    .getAttribute("content");
+  expect(description).not.toContain("Houston");
+});
+
+test("contact links are one size, each with its brand logo", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const contact = page.locator("#contact");
+  const links = [
+    contact.getByRole("link", { name: /kudayyurter@gmail\.com/ }),
+    contact.getByRole("link", { name: /GitHub/ }),
+    contact.getByRole("link", { name: /LinkedIn/ }),
+  ];
+  const sizes = await Promise.all(
+    links.map((link) =>
+      link.evaluate((element) => getComputedStyle(element).fontSize),
+    ),
+  );
+  expect(new Set(sizes).size).toBe(1);
+  for (const [link, file] of links.map(
+    (link, index) =>
+      [link, ["gmail.svg", "github.svg", "linkedin.svg"][index]] as const,
+  )) {
+    await expect(link.locator("img")).toHaveAttribute(
+      "src",
+      new RegExp(`/logos/${file}$`),
+    );
+  }
+});

@@ -227,6 +227,10 @@ a {
   border: 1px solid var(--line);
   color: var(--fg);
 }
+.monogram img {
+  display: block;
+  max-width: none; /* wide wordmarks size the box, not the other way round */
+}
 .monogram svg {
   display: block;
   width: auto;
@@ -338,25 +342,15 @@ a {
 }
 
 /* Contact */
-.contact-email {
-  display: inline-block;
-  margin-top: 16px;
-  font-size: clamp(1.5rem, 6vw, 3.5rem);
-  font-weight: 600;
-  letter-spacing: -0.03em;
-  text-decoration: none;
-  overflow-wrap: anywhere;
-  border-bottom: 2px solid var(--line);
-  transition: border-color 0.15s;
-}
-.contact-email:hover {
-  border-color: var(--fg);
-}
 .contact-links {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  margin-top: 32px;
+}
+.contact-links img {
+  display: block;
+  width: 18px;
+  height: 18px;
 }
 .contact-note {
   margin-top: 32px;

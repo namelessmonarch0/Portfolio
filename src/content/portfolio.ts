@@ -5,12 +5,13 @@ export const links = {
 };
 
 export const about = [
-  "I’m Kuday, a Computer Science student at Texas A&M University–Victoria, based in Houston. I build software that replaces slow, manual work with tools people actually use.",
+  "I’m Kuday, a Computer Science student at Texas A&M University–Victoria. I build software that replaces slow, manual work with tools people actually use.",
   "I’m a data science intern at Cummins, where I build dashboards, a machine learning model, AI assistants, and internal apps. Before that, I ran operations for an online engraving store and taught myself Python to automate it.",
 ];
 
 export const education = {
   monogram: "TAMU-V",
+  logo: { src: "/logos/tamuv.svg", width: 84, height: 44 },
   school: "Texas A&M University–Victoria",
   degree: "B.S. Computer Science · 3.8 GPA · President’s List",
   previously: "Associate of Science, Houston City College, 2022",
@@ -45,14 +46,24 @@ export const stack = [
   { name: "MATLAB", logo: "matlab" },
 ];
 
-/** Newest first. */
-export const experience = [
+/** A real logo shown in place of a pixel monogram. */
+export type Logo = { src: string; width: number; height: number };
+
+/** Newest first. `logo` replaces the pixel monogram when set. */
+export const experience: {
+  monogram: string;
+  logo?: Logo;
+  company: string;
+  role: string;
+  date: string;
+  highlights: string[];
+}[] = [
   {
     monogram: "C",
+    logo: { src: "/logos/cummins.svg", width: 48, height: 48 },
     company: "Cummins",
     role: "Data Science Intern",
     date: "May 2026 — Present",
-    location: "Columbus, IN",
     highlights: [
       "Built dashboards and a machine learning model for the turbo balancing line, which helped raise output from 35 to 55 turbos a day per machine.",
       "Built AI assistants for patent review and project intake, an app that replaced 5+ skills trackers, and the department’s SharePoint site.",
@@ -63,7 +74,6 @@ export const experience = [
     company: "Engrave Me Now",
     role: "Operations Manager",
     date: "Jan 2025 — May 2026",
-    location: "Katy, TX",
     highlights: [
       "Ran the production floor on my own for a store shipping 1,000+ orders a week, with a 4.9/5 rating across three storefronts.",
       "Built the sales and inventory system the business ran on, and kept four laser and UV machines running 99% of the time.",
@@ -71,10 +81,10 @@ export const experience = [
   },
   {
     monogram: "UH",
+    logo: { src: "/logos/uh.svg", width: 48, height: 48 },
     company: "University of Houston",
     role: "IT Support Specialist",
     date: "Jan 2023 — Aug 2024",
-    location: "Houston, TX",
     highlights: [
       "Fixed hardware and software problems for faculty and students in the College of Technology, with a 95% satisfaction rate.",
       "Kept 20+ computer labs up to date and set up new labs from unboxed hardware to networked machines.",
@@ -85,7 +95,6 @@ export const experience = [
     company: "IFixandRepair",
     role: "Store Manager & Repair Technician",
     date: "Dec 2020 — May 2022",
-    location: "Houston, TX",
     highlights: [
       "Repaired 100+ phones, tablets, and laptops — screens, cameras, back glass, and system recovery — with a 95% success rate.",
       "Ran the store alone on many shifts, from customer intake to repairs to closing.",

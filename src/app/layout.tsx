@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://kudayyurter.dev"),
   title: "Kuday Yurter — Software, Data & AI",
   description:
-    "I turn messy data into useful systems. Explore Kuday Yurter’s work in software engineering, data pipelines, and applied AI. Based in Houston, Texas.",
+    "I turn messy data into useful systems. Explore Kuday Yurter’s work in software engineering, data pipelines, and applied AI.",
   openGraph: {
     title: "Kuday Yurter — Software, Data & AI",
     description:
