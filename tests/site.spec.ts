@@ -383,3 +383,105 @@ test("contact links are one size, each with its brand logo", async ({
     );
   }
 });
+
+test("sections run About, Experience, Tech stack, Work, Personal, Contact", async ({
+  page,
+}) => {
+  await page.goto("/");
+  expect(
+    await page
+      .locator("main > section[id]")
+      .evaluateAll((sections) => sections.map((section) => section.id)),
+  ).toEqual([
+    "about",
+    "experience",
+    "stack",
+    "projects",
+    "personal",
+    "contact",
+  ]);
+});
+
+test("secondary text meets 4.5:1 contrast on black", async ({ page }) => {
+  await page.goto("/");
+  const ratios = await page
+    .locator(
+      ".job__meta, .project__stack, .contact-note, .site-footer__inner, .eyebrow",
+    )
+    .evaluateAll((elements) =>
+      elements.map((element) => {
+        const [r, g, b] = getComputedStyle(element)
+          .color.match(/\d+/g)!
+          .slice(0, 3)
+          .map((value) => {
+            const channel = Number(value) / 255;
+            return channel <= 0.03928
+              ? channel / 12.92
+              : ((channel + 0.055) / 1.055) ** 2.4;
+          });
+        const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+        return (luminance + 0.05) / 0.05;
+      }),
+    );
+  expect(ratios.length).toBeGreaterThan(0);
+  expect(Math.min(...ratios)).toBeGreaterThanOrEqual(4.5);
+});
+
+for (const width of [320, 360]) {
+  test(`no horizontal overflow at 200% text size, ${width}px wide`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width, height: 800 });
+    await page.goto("/");
+    await page.evaluate(() => {
+      document.documentElement.style.fontSize = "200%";
+    });
+    const overflow = await page.evaluate(
+      () =>
+        document.documentElement.scrollWidth -
+        document.documentElement.clientWidth,
+    );
+    expect(overflow).toBe(0);
+  });
+}
+
+test("nav links are at least 44px tall", async ({ page }) => {
+  for (const width of [360, 1280]) {
+    await page.setViewportSize({ width, height: 800 });
+    await page.goto("/");
+    const heights = await page
+      .getByRole("navigation", { name: "Primary" })
+      .getByRole("link")
+      .evaluateAll((links) =>
+        links.map((link) => link.getBoundingClientRect().height),
+      );
+    expect(Math.min(...heights), `at ${width}px`).toBeGreaterThanOrEqual(44);
+  }
+});
+
+test("sends browser security headers", async ({ request }) => {
+  const headers = (await request.get("/")).headers();
+  expect(headers["x-content-type-options"]).toBe("nosniff");
+  expect(headers["referrer-policy"]).toBe("strict-origin-when-cross-origin");
+  expect(headers["x-frame-options"]).toBe("DENY");
+  expect(headers["content-security-policy"]).toBe("frame-ancestors 'none'");
+  expect(headers["permissions-policy"]).toBe(
+    "camera=(), microphone=(), geolocation=()",
+  );
+});
+
+test("sections use tighter spacing than the name-only top", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/");
+  const padding = await page
+    .locator("#about")
+    .evaluate((section) => parseFloat(getComputedStyle(section).paddingTop));
+  expect(padding).toBeLessThanOrEqual(96);
+  await page.setViewportSize({ width: 360, height: 800 });
+  const mobile = await page
+    .locator("#about")
+    .evaluate((section) => parseFloat(getComputedStyle(section).paddingTop));
+  expect(mobile).toBeLessThanOrEqual(64);
+});

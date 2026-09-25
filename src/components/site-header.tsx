@@ -29,7 +29,13 @@ export function SiteHeader() {
     <header ref={ref} className="site-header" data-scrolled="false">
       <div className="site-header__inner container">
         <a className="site-header__home" href="#top" aria-label="Back to top">
-          <Image src={portraitHead} alt="" width={44} height={44} />
+          <Image
+            src={portraitHead}
+            alt=""
+            width={44}
+            height={44}
+            loading="eager"
+          />
         </a>
         <nav className="site-nav" aria-label="Primary">
           {NAV.map(([label, href]) => (

@@ -32,6 +32,8 @@ npx tsc --noEmit
 npm run build
 ```
 
+GitHub Actions (`.github/workflows/ci.yml`) runs the same checks plus `npm audit --audit-level=high` on every push, pull request, and weekly. Dependabot opens weekly update PRs.
+
 ## Deploying
 
 Pushes to `main` deploy to kudayyurter.dev on Vercel. Preview deployments are disabled.

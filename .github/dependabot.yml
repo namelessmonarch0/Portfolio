@@ -1,0 +1,15 @@
+# Weekly update PRs so security advisories are patched without a manual audit.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      # Next.js and its ESLint config must move together.
+      nextjs:
+        patterns: ["next", "eslint-config-next"]
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly

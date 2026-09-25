@@ -4,7 +4,7 @@
   --bg: #000;
   --fg: #fff;
   --muted: #a3a3a3;
-  --faint: #6b6b6b;
+  --faint: #808080; /* 5.3:1 on black, above the 4.5:1 text minimum */
   --line: #262626;
   --max: 1100px;
   --gutter: 16px;
@@ -79,20 +79,26 @@ a {
 }
 .site-header__inner {
   display: flex;
+  flex-wrap: wrap; /* enlarged text wraps the nav instead of overflowing */
   align-items: center;
   justify-content: space-between;
-  height: var(--header);
+  column-gap: 16px;
+  min-height: var(--header);
 }
 .site-header__home img {
   display: block;
 }
 .site-nav {
   display: flex;
-  gap: clamp(12px, 3vw, 32px);
+  flex-wrap: wrap;
+  column-gap: clamp(12px, 3vw, 32px);
   font-size: 0.8125rem;
   color: var(--muted);
 }
 .site-nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px; /* comfortable tap target; the type stays small */
   text-decoration: none;
   transition: color 0.15s;
 }
@@ -123,10 +129,12 @@ a {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  height: 44px;
-  padding: 0 20px;
+  min-height: 44px;
+  max-width: 100%;
+  padding: 8px 20px;
   border: 1px solid var(--line);
   border-radius: 999px;
+  overflow-wrap: anywhere;
   font-size: 0.9375rem;
   text-decoration: none;
   transition: background-color 0.15s, border-color 0.15s, color 0.15s;
@@ -136,7 +144,10 @@ a {
 }
 .text-link {
   display: inline-flex;
+  flex-wrap: wrap;
   gap: 8px;
+  max-width: 100%;
+  overflow-wrap: anywhere;
   margin-top: 32px;
   text-decoration: underline;
   text-underline-offset: 4px;
@@ -149,7 +160,7 @@ a {
 
 /* Sections */
 .section {
-  padding-block: clamp(72px, 12vw, 140px);
+  padding-block: clamp(56px, 8vw, 96px);
 }
 .section__title-wrap {
   margin-bottom: 40px;
@@ -160,6 +171,9 @@ a {
   line-height: 1.1;
   letter-spacing: -0.03em;
   font-weight: 600;
+  /* A single long word ("Experience") must not overflow when text is enlarged. */
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 .prose {
   max-width: 62ch;
@@ -176,7 +190,7 @@ a {
 /* Tech stack */
 .stack-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 6.5rem), 1fr));
   margin: 0;
   padding: 0;
   list-style: none;
@@ -210,6 +224,7 @@ a {
   letter-spacing: 0.04em;
   color: var(--muted);
   text-align: center;
+  overflow-wrap: anywhere;
 }
 
 /* Monograms */
@@ -235,6 +250,7 @@ a {
 /* Education */
 .education {
   display: flex;
+  flex-wrap: wrap; /* logo stacks above the text when space runs out */
   gap: 20px;
   align-items: flex-start;
   margin-top: 32px;

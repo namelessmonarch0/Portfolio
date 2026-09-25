@@ -81,7 +81,7 @@ export const experience: {
   },
   {
     monogram: "UH",
-    logo: { src: "/logos/uh.svg", width: 48, height: 48 },
+    logo: { src: "/logos/uh.svg", width: 57, height: 48 },
     company: "University of Houston",
     role: "IT Support Specialist",
     date: "Jan 2023 — Aug 2024",

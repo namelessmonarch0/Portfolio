@@ -78,24 +78,6 @@ export default function Home() {
           </RevealOnScroll>
         </Section>
 
-        <Section id="stack" title="Tech stack">
-          <RevealOnScroll>
-            <ol className="stack-grid">
-              {stack.map((tool) => (
-                <li key={tool.logo}>
-                  <Image
-                    src={`/logos/${tool.logo}.svg`}
-                    alt={tool.name}
-                    width={40}
-                    height={40}
-                  />
-                  <span aria-hidden="true">{tool.name}</span>
-                </li>
-              ))}
-            </ol>
-          </RevealOnScroll>
-        </Section>
-
         <Section id="experience" title="Experience">
           <ol className="timeline">
             {experience.map((job) => (
@@ -129,6 +111,24 @@ export default function Home() {
             >
               View my LinkedIn <span aria-hidden="true">↗</span>
             </a>
+          </RevealOnScroll>
+        </Section>
+
+        <Section id="stack" title="Tech stack">
+          <RevealOnScroll>
+            <ol className="stack-grid">
+              {stack.map((tool) => (
+                <li key={tool.logo}>
+                  <Image
+                    src={`/logos/${tool.logo}.svg`}
+                    alt={tool.name}
+                    width={40}
+                    height={40}
+                  />
+                  <span aria-hidden="true">{tool.name}</span>
+                </li>
+              ))}
+            </ol>
           </RevealOnScroll>
         </Section>
 
