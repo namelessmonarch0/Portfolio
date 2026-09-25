@@ -85,9 +85,6 @@ a {
 }
 .site-header__home img {
   display: block;
-  border-radius: 50%;
-  background: #141414;
-  box-shadow: 0 0 0 1px var(--line);
 }
 .site-nav {
   display: flex;
@@ -218,13 +215,11 @@ a {
 /* Monograms */
 .monogram {
   display: grid;
-  place-items: center;
+  place-items: center start;
   flex: none;
   justify-self: start;
   min-width: 72px;
   height: 72px;
-  padding: 0 12px;
-  border: 1px solid var(--line);
   color: var(--fg);
 }
 .monogram img {

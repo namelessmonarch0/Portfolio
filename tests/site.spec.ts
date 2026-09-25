@@ -89,13 +89,27 @@ test("the top of the page is just the name, on one line", async ({ page }) => {
   await expect(page.locator(".results")).toHaveCount(0);
 });
 
-test("the header portrait is at least 44px and framed", async ({ page }) => {
+test("the header portrait is at least 44px, with no circle frame", async ({
+  page,
+}) => {
   await page.goto("/");
   const avatar = page.locator(".site-header__home img");
   const box = await avatar.boundingBox();
   expect(box?.width).toBeGreaterThanOrEqual(44);
   await expect(avatar).not.toHaveCSS("image-rendering", "pixelated");
-  await expect(avatar).toHaveCSS("border-radius", "50%");
+  await expect(avatar).toHaveCSS("border-radius", "0px");
+  await expect(avatar).toHaveCSS("box-shadow", "none");
+});
+
+test("company and school logos have no box around them", async ({ page }) => {
+  await page.goto("/");
+  const widths = await page
+    .locator(".monogram")
+    .evaluateAll((boxes) =>
+      boxes.map((box) => getComputedStyle(box).borderTopWidth),
+    );
+  expect(widths.length).toBeGreaterThan(0);
+  expect(new Set(widths)).toEqual(new Set(["0px"]));
 });
 
 test("lists every job, newest first", async ({ page }) => {
