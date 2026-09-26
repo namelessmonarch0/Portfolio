@@ -491,9 +491,24 @@ test("nav jumps land below the header even when it wraps at 200% text", async ({
 }) => {
   await page.setViewportSize({ width: 320, height: 800 });
   await page.goto("/");
+  // The measured height needs React to have started; before that the 64px
+  // fallback applies by design. On slow CI machines, wait rather than race it.
+  await page.waitForFunction(() =>
+    getComputedStyle(document.documentElement).getPropertyValue(
+      "--header-height",
+    ),
+  );
   await page.evaluate(() => {
     document.documentElement.style.fontSize = "200%";
   });
+  await page.waitForFunction(
+    () =>
+      parseFloat(
+        getComputedStyle(document.documentElement).getPropertyValue(
+          "--header-height",
+        ),
+      ) > 100,
+  );
   const nav = page.getByRole("navigation", { name: "Primary" });
   for (const [name, id] of SECTIONS) {
     await nav.getByRole("link", { name }).click();
