@@ -485,3 +485,37 @@ test("sections use tighter spacing than the name-only top", async ({
     .evaluate((section) => parseFloat(getComputedStyle(section).paddingTop));
   expect(mobile).toBeLessThanOrEqual(64);
 });
+
+test("nav jumps land below the header even when it wraps at 200% text", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 320, height: 800 });
+  await page.goto("/");
+  await page.evaluate(() => {
+    document.documentElement.style.fontSize = "200%";
+  });
+  const nav = page.getByRole("navigation", { name: "Primary" });
+  for (const [name, id] of SECTIONS) {
+    await nav.getByRole("link", { name }).click();
+    await expect(page).toHaveURL(new RegExp(`#${id}$`));
+    // Measure only where smooth scrolling ends, not while it passes by.
+    await page.waitForFunction(
+      () =>
+        new Promise((resolve) => {
+          const start = scrollY;
+          setTimeout(() => resolve(scrollY === start), 200);
+        }),
+    );
+    const { headerBottom, titleTop } = await page.evaluate(
+      (id) => ({
+        headerBottom: document
+          .querySelector(".site-header")!
+          .getBoundingClientRect().bottom,
+        titleTop: document.querySelector(`#${id} h2`)!.getBoundingClientRect()
+          .top,
+      }),
+      id,
+    );
+    expect(titleTop, `${name} heading`).toBeGreaterThanOrEqual(headerBottom);
+  }
+});

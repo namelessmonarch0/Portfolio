@@ -21,7 +21,8 @@
 
 html {
   background: var(--bg);
-  scroll-padding-top: var(--header);
+  /* --header-height is the measured header (site-header.tsx); 64px without JS. */
+  scroll-padding-top: var(--header-height, var(--header));
 }
 
 body {

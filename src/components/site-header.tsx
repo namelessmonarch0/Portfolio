@@ -22,7 +22,23 @@ export function SiteHeader() {
     };
     update();
     window.addEventListener("scroll", update, { passive: true });
-    return () => window.removeEventListener("scroll", update);
+
+    // The nav wraps when text is enlarged, so publish the real header height
+    // for scroll-padding; otherwise anchor jumps land under a taller header.
+    const root = document.documentElement;
+    const resize = new ResizeObserver(([entry]) => {
+      root.style.setProperty(
+        "--header-height",
+        `${entry.borderBoxSize[0].blockSize}px`,
+      );
+    });
+    resize.observe(header);
+
+    return () => {
+      window.removeEventListener("scroll", update);
+      resize.disconnect();
+      root.style.removeProperty("--header-height");
+    };
   }, []);
 
   return (
